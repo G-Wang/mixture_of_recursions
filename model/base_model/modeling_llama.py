@@ -15,13 +15,20 @@ from transformers.modeling_utils import ALL_ATTENTION_FUNCTIONS, PreTrainedModel
 from transformers.processing_utils import Unpack
 from transformers.pytorch_utils import ALL_LAYERNORM_LAYERS
 from transformers.utils import (
-    LossKwargs,
     add_code_sample_docstrings,
     add_start_docstrings,
     add_start_docstrings_to_model_forward,
     logging,
     replace_return_docstrings,
 )
+
+try:  # LossKwargs moved in newer versions of transformers
+    from transformers.utils import LossKwargs
+except Exception:  # pragma: no cover - fallback for older versions
+    from typing import TypedDict
+
+    class LossKwargs(TypedDict, total=False):  # type: ignore
+        pass
 from transformers import LlamaConfig
 from transformers.utils.deprecation import deprecate_kwarg
 
