@@ -5,7 +5,11 @@ import torch
 from transformers.configuration_utils import PretrainedConfig
 from transformers.utils import logging
 from transformers.utils.deprecation import deprecate_kwarg
-from transformers.cache_utils import _static_cache_update
+try:
+    from transformers.cache_utils import _static_cache_update
+except Exception:  # pragma: no cover - older/newer transformers
+    def _static_cache_update(*args, **kwargs):  # type: ignore
+        raise NotImplementedError("_static_cache_update is unavailable")
 
 logger = logging.get_logger(__name__)
 
