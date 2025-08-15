@@ -192,6 +192,24 @@ bash scripts/pretrain_eval_fewshot.sh {launcher} {wandb_mode} {gpu_indices} {exp
 ```
 
 
+### 👉 Multi-GPU Quick Start
+
+For an end-to-end workflow that prepares local data directories, downloads the FineWeb-Edu dataset, and launches pretraining, use `scripts/run_all.sh`:
+
+```bash
+# 4-GPU example
+bash scripts/run_all.sh accelerate online 4 --model-size smollm-360m
+```
+
+Replace `4` with `2`, `6`, or `8` to match your hardware. You can also provide explicit configuration names instead of `--model-size`:
+
+```bash
+bash scripts/run_all.sh deepspeed offline 8 250720_pretrain_smollm-360m_rec3_middle_cycle_random_lr3e-3.yaml
+```
+
+When `--model-size` is supplied, every pretraining config in `conf/pretrain` containing that size substring is executed sequentially.
+
+
 ## ✅ Pretrained Checkpoints
 
 We share pretrained checkpoints for our 360M parameter Vanilla, Recursive, and MoR models in [Google Drive](https://drive.google.com/drive/folders/1pYKJOu2aBGC-jgoWbfP6T_vqEYtUVxa4?usp=drive_link). Move checkpoints under `./checkpoints` folder.
