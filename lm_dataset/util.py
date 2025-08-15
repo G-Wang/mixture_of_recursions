@@ -1,14 +1,28 @@
 import os
 import shutil
 import struct
-import boto3
-import botocore
 import pickle
 import warnings
 from functools import lru_cache
 from itertools import accumulate
+
 from smart_open import open
-from botocore.exceptions import ClientError
+
+try:  # pragma: no cover - boto3 is optional
+    import boto3
+    import botocore
+    from botocore.exceptions import ClientError
+
+    s3 = boto3.client(
+        "s3",
+        region_name="us-west-2",
+        config=botocore.config.Config(signature_version=botocore.UNSIGNED),
+    )
+except ImportError:  # pragma: no cover - allow usage without boto3
+    boto3 = None
+    botocore = None
+    ClientError = Exception
+    s3 = None
 
 import numpy as np
 import torch
@@ -26,13 +40,14 @@ dtypes = {
     8: np.uint16,
 }
 
-s3 = boto3.client('s3', region_name='us-west-2', config=botocore.config.Config(signature_version=botocore.UNSIGNED))
 bucket_name = "softwareheritage"
 DOWNLOAD_DIR = os.path.join(DATA_DIR, "python-edu-text")
 
 
 def load_python_edu_text(blob_id):
     """ This function is only for preprocessing python-edu datasets."""
+    if s3 is None:
+        raise ImportError("boto3 is required to download python-edu text")
     s3_url = f"s3://softwareheritage/content/{blob_id}"
     file_path = os.path.join(DOWNLOAD_DIR, f"{blob_id}.pkl")
 
