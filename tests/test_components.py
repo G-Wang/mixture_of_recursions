@@ -26,10 +26,11 @@ def tiny_config():
 
 def run_forward(model_cls):
     config = tiny_config()
-    model = model_cls(config)
-    input_ids = torch.ones((1, 4), dtype=torch.long)
+    model = model_cls(config).to("cpu")
+    input_ids = torch.ones((1, 4), dtype=torch.long, device="cpu")
     outputs = model(input_ids=input_ids)
     assert outputs.logits.shape == (1, 4, config.vocab_size)
+    assert outputs.logits.device.type == "cpu"
 
 
 def test_base_llama_forward():
