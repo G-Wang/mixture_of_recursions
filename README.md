@@ -38,27 +38,33 @@ We achieve up to **2× greater inference throughput** compared to standard trans
 
 ## 🏃 Environment Setup
 
-To get started, follow these steps to set up your development environment. We recommend using `conda` for dependency management.
+To get started, follow these steps to set up your development environment. We recommend using [`uv`](https://github.com/astral-sh/uv) for dependency management.
 
-1.  **Create and Activate Conda Environment:**
+1.  **Install and Activate a Virtual Environment:**
     ```bash
-    conda create -n mor python=3.12
-    conda activate mor
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    uv venv
+    source .venv/bin/activate
     ```
 
 2.  **Install Required Packages:**
-    First, ensure your `pip` and `setuptools` are up to date. Then, install `torch` and the dependencies listed in [requirements.txt](https://github.com/raymin0223/mixture_of_recursions/tree/main/requirements.txt).
+    Choose the appropriate setup for your hardware and install `torch` followed by the project dependencies.
 
-    **Note:** We specifically used `torch==2.6.0+cu124`, `flash_attn==2.7.4.post1`, and `transformers==4.52.4`. If you encounter issues, consider these exact versions.
+    - **CPU-only development (e.g., macOS or machines without CUDA):**
+      ```bash
+      uv pip install torch --index-url https://download.pytorch.org/whl/cpu
+      uv pip install -r requirements-cpu.txt
+      ```
 
-    ```bash
-    pip install --upgrade pip
-    pip install --upgrade setuptools
-    pip install torch
-    pip install -r requirements.txt
-    # If you experience issues with flash-attn, try:
-    # pip install flash-attn --no-build-isolation
-    ```
+    - **CUDA-enabled server:**
+      ```bash
+      uv pip install torch --index-url https://download.pytorch.org/whl/cu121
+      uv pip install -r requirements.txt
+      # If you experience issues with flash-attn, try:
+      # uv pip install flash-attn --no-build-isolation
+      ```
+
+    **Note:** We specifically used `torch==2.8.0`, `flash_attn==2.8.2`, and `transformers==4.55.2`. If you encounter issues, consider these exact versions.
 
 
 ## 📚 Dataset Download
